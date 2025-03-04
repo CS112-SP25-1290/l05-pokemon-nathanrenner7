@@ -1,8 +1,11 @@
+import java.util.InputMismatchException;
+import java.util.Objects;
+
 //class invariant: must have first type, second type can be null
 public class Pokemon {
 	// CONSTANT VARIABLES
 	public static final String[] TYPES = { "Normal", "Fire", "Fighting", "Water", "Flying", "Grass", "Poison",
-		"Electric", "Ground", "Psychic", "Rock", "Ice", "Bug", "Dragon", "Ghost", "Dark", "Steel", "Fairy"};
+			"Electric", "Ground", "Psychic", "Rock", "Ice", "Bug", "Dragon", "Ghost", "Dark", "Steel", "Fairy"};
 	public static final String DEFAULT_NAME = "Missingno.";
 	public static final String DEFAULT_TYPE1 = "Normal";
 	public static final String DEFAULT_TYPE2 = null;
@@ -14,10 +17,10 @@ public class Pokemon {
 
 	// CONSTRUCTORS
 	public Pokemon(String name, String type1, String type2) {
-		if(!this.setAll(name, type1, type2)) {
-			System.out.println("ERROR: Pokemon full constructor illegal argument passed. Exiting program.");
-			System.exit(0);
+		if (!isValidType(type1) || (type2 != null && !isValidType(type2))) {
+			throw new InputMismatchException("Invalid type specified.");
 		}
+		this.setAll(name, type1, type2);
 	}
 
 	public Pokemon(String name, String type) {
@@ -28,11 +31,11 @@ public class Pokemon {
 	}
 
 	public Pokemon(Pokemon p) throws IllegalArgumentException {
-		if(p == null) {
-			System.out.println("ERROR: Pokemon copy constructor illegal argument (null) passed.");
-			System.exit(0);
+		try {
+			this.setAll(p.name, p.type1, p.type2);
+		} catch (Exception exc) {
+			System.out.println("Error copying the pokemon object!");
 		}
-		this.setAll(p.name, p.type1, p.type2);
 	}
 
 	// MUTATOR/SETTER METHODS
@@ -96,7 +99,7 @@ public class Pokemon {
 		} else {
 			Pokemon otherPokemon = (Pokemon)other;
 			boolean type2Equals = (this.type2 == null && otherPokemon.type2 == null)
-                || (this.type2 != null & otherPokemon.type2 != null && this.type2.equals(otherPokemon.type2));
+					|| (this.type2 != null & otherPokemon.type2 != null && this.type2.equals(otherPokemon.type2));
 			return this.name.equals(otherPokemon.name) && this.type1.equals(otherPokemon.type1) && type2Equals;
 		}
 	}

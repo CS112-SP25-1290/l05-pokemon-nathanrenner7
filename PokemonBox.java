@@ -9,12 +9,13 @@ public class PokemonBox {
 
 	// CONSTRUCTORS
 	public PokemonBox(Pokemon[] caught) {
-		if(caught == null || caught.length == 0) {
-			System.out.println("ERROR: Invalid Pokemon array provided to PokemonBox. Exiting program.");
-			System.exit(0);
+		try {
+			this.numCaught = caught.length;
+			this.caught = this.deepCopyArray(caught, this.numCaught*2);
+		} catch (Exception exc) {
+			System.out.println("Error copying array of pokemon to a new pokebox, skipping...");
 		}
-		this.numCaught = caught.length;
-		this.caught = this.deepCopyArray(caught, this.numCaught*2);
+
 	}
 
 	public PokemonBox() {
@@ -40,7 +41,12 @@ public class PokemonBox {
 	}
 
 	public Pokemon getPokemon(int location) {
-		return this.caught[location];
+		try {
+			return this.caught[location];
+		} catch (Exception exc) {
+			System.out.println("Error, invalid location entered.");
+			return null;
+		}
 	}
 
 	public int getNumCaught() {
@@ -57,14 +63,12 @@ public class PokemonBox {
 
 	// MUTATOR/SETTER METHODS
 	public void add(Pokemon newPoke) {
-		//new pokemon,  add to partially filled array
-		//but first check if box is full
-		if(this.numCaught == this.caught.length) {
-			//if full, then grow array *2 and copy contents over
+		System.out.println(this.numCaught);
+		if(this.numCaught > DEFAULT_CAPACITY) {
 			this.caught = this.deepCopyArray(this.caught, this.numCaught*2);
+			return;
 		}
 
-		//then add new caught pokemon
 		this.caught[this.numCaught] = new Pokemon(newPoke);
 		this.numCaught++;
 	}

@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 class Main {
@@ -30,7 +31,13 @@ class Main {
 			System.out.println("\nMAIN MENU\nWhat would you like to do?");
 			System.out.println("\t1) Add a New Pokemon \n\t2) List All Pokemon \n\t3) Exit Program \n");
 			System.out.print("Enter choice number> ");
-			choice = keyboard.nextInt(); //could throw exception here and skip rest of code
+			try {
+				choice = keyboard.nextInt();
+			} catch (InputMismatchException exc) {
+				System.out.println("Please enter a valid number option.");
+				continue;
+			}
+			 //could throw exception here and skip rest of code
 			keyboard.nextLine();
 			System.out.println();
 
@@ -44,10 +51,25 @@ class Main {
 				String type2 = keyboard.nextLine();
 				type2 = (type2.equalsIgnoreCase("none")) ? null : type2;
 
-				Pokemon p = new Pokemon(name, type1, type2);
-				myBox.add(p); //could throw exception here and skip rest of code
+				try {
+					Pokemon p = new Pokemon(name, type1, type2);
 
-				System.out.println("\n" + name + " added!");
+					for(Pokemon pokemon : caught) {
+						if(pokemon.equals(p)) {
+							throw new PokemonAlreadyExistsException();
+                        }
+					}
+					myBox.add(p);
+				} catch (IllegalArgumentException | NullPointerException | InputMismatchException exc) {
+					System.out.println("Invalid pokemon data entered, please enter valid pokemon data. Exception: " + exc);
+					continue;
+				} catch (PokemonAlreadyExistsException e) {
+                    System.out.println("This pokemon already exists! Try creating a different type.");
+					continue;
+                }
+
+
+                System.out.println("\n" + name + " added!");
 			} else if (choice == 2) {
 				System.out.println(myBox);
 			} else if (choice == 3) {
@@ -55,6 +77,7 @@ class Main {
 				tryAgain = false;
 			} else {
 				System.out.println("Invalid choice, please pick a valid option from the menu.\n");
+				continue;
 			}
 		} while (tryAgain);
 
