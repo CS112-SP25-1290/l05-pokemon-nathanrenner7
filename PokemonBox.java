@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class PokemonBox {
 
 	// CONSTANT VARIABLES
@@ -62,13 +64,18 @@ public class PokemonBox {
 	}
 
 	// MUTATOR/SETTER METHODS
-	public void add(Pokemon newPoke) {
+	public void add(Pokemon newPoke) throws PokemonAlreadyExistsException {
 		System.out.println(this.numCaught);
+		for(Pokemon pokemon : caught) {
+			if(Objects.equals(pokemon.getName(), newPoke.getName()) || pokemon.equals(newPoke)) {
+				throw new PokemonAlreadyExistsException();
+			}
+		}
+
 		if(this.numCaught > DEFAULT_CAPACITY) {
 			this.caught = this.deepCopyArray(this.caught, this.numCaught*2);
 			return;
 		}
-
 		this.caught[this.numCaught] = new Pokemon(newPoke);
 		this.numCaught++;
 	}

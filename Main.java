@@ -53,12 +53,6 @@ class Main {
 
 				try {
 					Pokemon p = new Pokemon(name, type1, type2);
-
-					for(Pokemon pokemon : caught) {
-						if(pokemon.equals(p)) {
-							throw new PokemonAlreadyExistsException();
-                        }
-					}
 					myBox.add(p);
 				} catch (IllegalArgumentException | NullPointerException | InputMismatchException exc) {
 					System.out.println("Invalid pokemon data entered, please enter valid pokemon data. Exception: " + exc);
